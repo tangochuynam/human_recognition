@@ -30,7 +30,6 @@ class Actions(Enum):
     # operate = 2
     # fall_down = 3
     # run = 4
-
     # amazon_recognition.h5
     handy = 0
     moving = 1

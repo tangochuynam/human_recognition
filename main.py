@@ -13,8 +13,8 @@ parser.add_argument('--video', help='Path to video file.')
 args = parser.parse_args()
 
 # imported related models
-# estimator = load_pretrain_model('VGG_origin')
-estimator = load_pretrain_model('mobilenet_thin')
+estimator = load_pretrain_model('VGG_origin')
+# estimator = load_pretrain_model('mobilenet_thin')
 action_classifier = load_action_premodel('Action/training/amazon_recognition.h5')
 
 # parameter initialization

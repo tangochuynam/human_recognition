@@ -99,7 +99,7 @@ class TfPoseVisualizer:
         if npimg.shape[:2] != (self.target_size[1], self.target_size[0]):
             # resize
             npimg = cv.resize(npimg, self.target_size)
-            print("npimg size " + str(npimg.shape) )
+            # print("npimg size " + str(npimg.shape) )
             rois.extend([npimg])
             infos.extend([(0.0, 0.0, 1.0, 1.0)])
 

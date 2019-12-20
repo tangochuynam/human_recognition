@@ -27,19 +27,18 @@ frame_count = 0
 # Read and write video files (tested only for webcam input)
 cap = choose_run_mode(args)
 video_writer = set_video_writer(cap, write_fps=int(15.0))
-
+humans = []
 
 # # A txt file that stores joint data for the training process (for training)
 #f = open('origin_data.txt', 'a+')
-
 while cv.waitKey(1) < 0:
     has_frame, show = cap.read()
     if has_frame:
         fps_count += 1
         frame_count += 1
-
         # pose estimation
-        humans = estimator.inference(show)
+        if frame_count % 2 == 1:
+            humans = estimator.inference(show)
         
         # print(len(humans))
         # print(humans[0].uidx_list)

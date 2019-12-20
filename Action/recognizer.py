@@ -21,10 +21,10 @@ nn_budget = None
 nms_max_overlap = 1.0
 
 # 初始化deep_sort
-model_filename = str(file_path/'Tracking/graph_model/mars-small128.pb')
-encoder = gdet.create_box_encoder(model_filename, batch_size=1)
-metric = NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
-tracker = Tracker(metric)
+# model_filename = str(file_path/'Tracking/graph_model/mars-small128.pb')
+# encoder = gdet.create_box_encoder(model_filename, batch_size=1)
+# metric = NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
+# tracker = Tracker(metric)
 
 # track_box颜色
 trk_clr = (0, 255, 0)
@@ -105,33 +105,33 @@ def framewise_recognize(pose, pretrained_model):
 
     if bboxes:
         bboxes = np.array(bboxes)
-        features = encoder(frame, bboxes)
+        # features = encoder(frame, bboxes)
 
         # score to 1.0 here).
-        detections = [Detection(bbox, 1.0, feature) for bbox, feature in zip(bboxes, features)]
+        # detections = [Detection(bbox, 1.0, feature) for bbox, feature in zip(bboxes, features)]
 
         # 进行非极大抑制
-        boxes = np.array([d.tlwh for d in detections])
-        scores = np.array([d.confidence for d in detections])
-        indices = preprocessing.non_max_suppression(boxes, nms_max_overlap, scores)
-        detections = [detections[i] for i in indices]
+        # boxes = np.array([d.tlwh for d in detections])
+        # scores = np.array([d.confidence for d in detections])
+        # indices = preprocessing.non_max_suppression(boxes, nms_max_overlap, scores)
+        # detections = [detections[i] for i in indices]
 
         # 调用tracker并实时更新
-        tracker.predict()
-        tracker.update(detections)
+        # tracker.predict()
+        # tracker.update(detections)
 
-        # 记录track的结果，包括bounding boxes及其ID
-        trk_result = []
-        for trk in tracker.tracks:
-            if not trk.is_confirmed() or trk.time_since_update > 1:
-                continue
-            bbox = trk.to_tlwh()
-            trk_result.append([bbox[0], bbox[1], bbox[2], bbox[3], trk.track_id])
-            # 标注track_ID
-            trk_id = 'ID-' + str(trk.track_id)
-            cv.putText(frame, trk_id, (int(bbox[0]), int(bbox[1]-45)), cv.FONT_HERSHEY_SIMPLEX, 0.8, trk_clr, 3)
+        # # 记录track的结果，包括bounding boxes及其ID
+        # trk_result = []
+        # for trk in tracker.tracks:
+        #     if not trk.is_confirmed() or trk.time_since_update > 1:
+        #         continue
+        #     bbox = trk.to_tlwh()
+        #     trk_result.append([bbox[0], bbox[1], bbox[2], bbox[3], trk.track_id])
+        #     # 标注track_ID
+        #     trk_id = 'ID-' + str(trk.track_id)
+        #     cv.putText(frame, trk_id, (int(bbox[0]), int(bbox[1]-45)), cv.FONT_HERSHEY_SIMPLEX, 0.8, trk_clr, 3)
 
-        for d in trk_result:
+        for d in bboxes:
             xmin = int(d[0])
             ymin = int(d[1])
             xmax = int(d[2]) + xmin
@@ -153,7 +153,7 @@ def framewise_recognize(pose, pretrained_model):
                 pred = np.argmax(pretrained_model.predict(joints_norm_single_person))
                 init_label = Actions(pred).name
                 # 显示动作类别
-                cv.putText(frame, init_label, (xmin + 80, ymin - 45), cv.FONT_HERSHEY_SIMPLEX, 1, trk_clr, 3)
+                cv.putText(frame, init_label, (xmin, ymin - 45), cv.FONT_HERSHEY_SIMPLEX, 0.75, trk_clr, 2)
                 # 异常预警(under scene)
                 if init_label == 'fall_down':
                     cv.putText(frame, 'WARNING: someone is falling down!', (20, 60), cv.FONT_HERSHEY_SIMPLEX,

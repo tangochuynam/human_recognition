@@ -82,10 +82,8 @@ def estimate(heat_mat, paf_mat):
         else:
             break
 
-    # reject by subset count
-    humans = [human for human in humans if human.part_count() >= PAF_Count_Threshold]
-    # reject by subset max score
-    humans = [human for human in humans if human.get_max_score() >= Part_Score_Threshold]
+    # reject by subset count & reject by subset max score
+    humans = [human for human in humans if (human.part_count() >= PAF_Count_Threshold) & (human.get_max_score() >= Part_Score_Threshold)]
     return humans
 
 

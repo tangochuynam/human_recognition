@@ -26,7 +26,7 @@ run_timer = 0
 frame_count = 0
 # Read and write video files (tested only for webcam input)
 cap = choose_run_mode(args)
-video_writer = set_video_writer(cap, write_fps=int(7.0))
+video_writer = set_video_writer(cap, write_fps=int(15.0))
 
 
 # # A txt file that stores joint data for the training process (for training)

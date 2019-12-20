@@ -3,6 +3,7 @@ import cv2 as cv
 import argparse
 import numpy as np
 import time
+
 from utils import choose_run_mode, load_pretrain_model, set_video_writer
 from Pose.pose_visualizer import TfPoseVisualizer
 from Action.recognizer import load_action_premodel, framewise_recognize
@@ -12,7 +13,8 @@ parser.add_argument('--video', help='Path to video file.')
 args = parser.parse_args()
 
 # imported related models
-estimator = load_pretrain_model('VGG_origin')
+# estimator = load_pretrain_model('VGG_origin')
+estimator = load_pretrain_model('mobilenet_thin')
 action_classifier = load_action_premodel('Action/training/amazon_recognition.h5')
 
 # parameter initialization
@@ -22,7 +24,6 @@ fps_interval = 1
 fps_count = 0
 run_timer = 0
 frame_count = 0
-
 # Read and write video files (tested only for webcam input)
 cap = choose_run_mode(args)
 video_writer = set_video_writer(cap, write_fps=int(7.0))

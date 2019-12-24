@@ -6,9 +6,10 @@ from pathlib import Path
 from Pose.pose_visualizer import TfPoseVisualizer
 
 file_path = Path.cwd()
-out_file_path = Path(file_path / "test_out/")
+# out_file_path = Path(file_path / "test_out/")
+out_file_path = Path("/media/xaviersd/11F1-1158/")
 # camera resolution setting
-cam_width, cam_height = 1280, 720
+cam_width, cam_height = 640, 480
 # input size to the model
 # VGG trained in 656*368; mobilenet_thin trained in 432*368 (from tf-pose-estimation)
 input_width, input_height = 656, 368
@@ -25,7 +26,8 @@ def choose_run_mode(args):
             print("Input video file ", args.video, " doesn't exist")
             sys.exit(1)
         cap = cv.VideoCapture(args.video)
-        out_file_path = str(out_file_path / (args.video[:-4] + '_tf_out.mp4'))
+        # out_file_path = str(out_file_path / (args.video[:-4] + '_tf_out.mp4'))
+        out_file_path = str(out_file_path / 'out.mp4')
     else:
         # Webcam input
         cap = cv.VideoCapture(0)
@@ -52,4 +54,4 @@ def set_video_writer(cap, write_fps=15):
     return cv.VideoWriter(out_file_path,
                           cv.VideoWriter_fourcc(*'mp4v'),
                           write_fps,
-                          (round(cap.get(cv.CAP_PROP_FRAME_WIDTH)), round(cap.get(cv.CAP_PROP_FRAME_HEIGHT))))
+                          (cam_width, cam_height))

@@ -8,13 +8,14 @@ from utils import choose_run_mode, load_pretrain_model, set_video_writer
 from Pose.pose_visualizer import TfPoseVisualizer
 from Action.recognizer import load_action_premodel, framewise_recognize
 
+
 parser = argparse.ArgumentParser(description='Action Recognition by OpenPose')
 parser.add_argument('--video', help='Path to video file.')
 args = parser.parse_args()
 
 # imported related models
-# estimator = load_pretrain_model('VGG_origin')
-estimator = load_pretrain_model('mobilenet_thin')
+estimator = load_pretrain_model('VGG_origin')
+# estimator = load_pretrain_model('mobilenet_thin')
 action_classifier = load_action_premodel('Action/training/amazon_recognition.h5')
 
 # parameter initialization
@@ -30,7 +31,8 @@ video_writer = set_video_writer(cap, write_fps=int(15.0))
 humans = []
 
 # # A txt file that stores joint data for the training process (for training)
-#f = open('origin_data.txt', 'a+')
+# f = open('origin_data.txt', 'a+')
+
 while cv.waitKey(1) < 0:
     has_frame, show = cap.read()
     if has_frame:
@@ -39,7 +41,7 @@ while cv.waitKey(1) < 0:
         # pose estimation
         if frame_count % 2 == 1:
             humans = estimator.inference(show)
-        
+
         # print(len(humans))
         # print(humans[0].uidx_list)
         # print(humans[0].body_parts)
@@ -48,8 +50,8 @@ while cv.waitKey(1) < 0:
         pose = TfPoseVisualizer.draw_pose_rgb(show, humans)  # return frame, joints, bboxes, xcenter
         # recognize the action framewise
         show = framewise_recognize(pose, action_classifier)
-
         height, width = show.shape[:2]
+
         # Display real-time FPS values
         if (time.time() - start_time) > fps_interval:
             # 计算这个interval过程中的帧数，若interval为1秒，则为FPS
@@ -65,10 +67,11 @@ while cv.waitKey(1) < 0:
         cv.putText(show, num_label, (5, height-45), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
 
         # Show current run time and total frames
-        if frame_count == 1:
-            run_timer = time.time()
-        run_time = time.time() - run_timer
-        time_frame_label = '[Time:{0:.2f} | Frame:{1}]'.format(run_time, frame_count)
+        # if frame_count == 1:
+        #     run_timer = time.time()
+        # run_time = time.time() - run_timer
+        # time_frame_label = '[Time:{0:.2f} | Frame:{1}]'.format(run_time, frame_count)
+        time_frame_label = 'Frame:{0}'.format(frame_count)
         cv.putText(show, time_frame_label, (5, height-15), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
 
         cv.imshow('Action Recognition based on OpenPose', show)

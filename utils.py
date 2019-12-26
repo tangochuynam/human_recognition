@@ -48,8 +48,8 @@ def load_pretrain_model(model):
     return TfPoseVisualizer(graph_path, target_size=(input_width, input_height))
 
 
-def set_video_writer(cap, write_fps=15):
-    return cv.VideoWriter(out_file_path,
+def set_video_writer(cap, write_fps=15, out_path=out_file_path):
+    return cv.VideoWriter(out_path,
                           cv.VideoWriter_fourcc(*'mp4v'),
                           write_fps,
                           (round(cap.get(cv.CAP_PROP_FRAME_WIDTH)), round(cap.get(cv.CAP_PROP_FRAME_HEIGHT))))

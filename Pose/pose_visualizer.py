@@ -5,6 +5,10 @@ import tensorflow as tf
 from .coco_format import CocoPart, CocoColors, CocoPairsRender
 from .pose_estimator import estimate
 
+# set the device for running GPU calculation
+# import os
+# os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
 
 class TfPoseVisualizer:
     # the thickness of showing skeleton
@@ -20,9 +24,9 @@ class TfPoseVisualizer:
         self.graph = tf.compat.v1.get_default_graph()
         tf.import_graph_def(graph_def, name='TfPoseEstimator')
         self.persistent_sess = tf.compat.v1.Session(graph=self.graph)
-
-        self.tensor_image = self.graph.get_tensor_by_name('TfPoseEstimator/image:0')
-        self.tensor_output = self.graph.get_tensor_by_name('TfPoseEstimator/Openpose/concat_stage7:0')
+        with tf.device('/device:GPU:1'):
+            self.tensor_image = self.graph.get_tensor_by_name('TfPoseEstimator/image:0')
+            self.tensor_output = self.graph.get_tensor_by_name('TfPoseEstimator/Openpose/concat_stage7:0')
         self.heatMat = self.pafMat = None
 
     @staticmethod
@@ -102,7 +106,6 @@ class TfPoseVisualizer:
             # print("npimg size " + str(npimg.shape) )
             rois.extend([npimg])
             infos.extend([(0.0, 0.0, 1.0, 1.0)])
-
 
         output = self.persistent_sess.run(self.tensor_output, feed_dict={self.tensor_image: rois})
 
